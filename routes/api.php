@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\OrdemServicoController;
+use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,4 +26,19 @@ Route::group([
     Route::get('/relatorio-mensal', [UserController::class, 'relatorioMensal']);
 });
 
-Route::resource('users', UserController::class);
+Route::apiResource('users', UserController::class);
+
+// /clientes
+Route::apiResource('clientes', ClienteController::class);
+Route::group([
+    'prefix' => 'clientes'
+], function () {
+    // /clientes/enderecos
+    Route::apiResource('enderecos', ClienteController::class);
+});
+
+// Serviços
+Route::apiResource('servicos', ServicoController::class);
+
+// Ordem de serviços
+Route::apiResource('ordens-servicos', OrdemServicoController::class);
