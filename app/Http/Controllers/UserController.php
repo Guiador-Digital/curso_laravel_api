@@ -13,7 +13,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            'msg' => 'Rota de listagem de usuários'
+        ]);
     }
 
     /**
@@ -24,7 +26,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return response()->json([
+            'msg' => 'Rota de inserção de usuário'
+        ]);
     }
 
     /**
@@ -35,7 +39,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json([
+            'msg' => 'Rota de listagem de 1 usuário'
+        ]);
     }
 
     /**
@@ -47,7 +53,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return response()->json([
+            'msg' => 'Rota de atualização de usuário'
+        ]);
     }
 
     /**
@@ -58,6 +66,15 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return response()->json([
+            'msg' => 'Rota de exclusão de usuário'
+        ]);
+    }
+
+    public function relatorioMensal()
+    {
+        return response()->json([
+            'msg' => 'Relatório mensal'
+        ]);
     }
 }

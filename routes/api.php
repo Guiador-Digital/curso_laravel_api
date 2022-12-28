@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,36 +16,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Rotas de usuários
+
 Route::group([
     'prefix' => 'users'
 ], function () {
-    Route::get('/', function () {
-        return response()->json([
-            'msg' => 'Rota de listagem de usuários'
-        ]);
-    });
-
-    Route::post('/', function () {
-        return response()->json([
-            'msg' => 'Rota de inserção de usuário'
-        ]);
-    });
-
-    Route::get('/{user}', function () {
-        return response()->json([
-            'msg' => 'Rota de listagem de 1 usuário'
-        ]);
-    });
-
-    Route::put('/{user}', function () {
-        return response()->json([
-            'msg' => 'Rota de atualização de usuário'
-        ]);
-    });
-
-    Route::delete('/{user}', function () {
-        return response()->json([
-            'msg' => 'Rota de exclusão de usuário'
-        ]);
-    });
+    Route::get('/relatorio-mensal', [UserController::class, 'relatorioMensal']);
 });
+
+Route::resource('users', UserController::class);
