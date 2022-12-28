@@ -56,8 +56,16 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        $user = User::where('id', $id)->first();
+
+        if ($user == null) {
+            return response()->json([
+                'msg' => 'Houve um erro ao buscar este registro'
+            ], 404);
+        }
+
         return response()->json([
-            'msg' => 'Rota de listagem de 1 usuário'
+            'data' => $user
         ]);
     }
 
