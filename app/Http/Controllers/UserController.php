@@ -14,9 +14,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'msg' => 'Rota de listagem de usuários'
-        ]);
+        $data = User::simplePaginate(10);
+
+        return response()->json($data);
     }
 
     /**
