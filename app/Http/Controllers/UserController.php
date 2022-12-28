@@ -78,8 +78,23 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = User::where('id', $id)->first();
+
+        if ($user == null) {
+            return response()->json([
+                'msg' => 'Não foi possível encontrar este registro'
+            ], 404);
+        }
+
+        $data = [
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+        ];
+
+        $user->update($data);
+
         return response()->json([
-            'msg' => 'Rota de atualização de usuário'
+            'data' => $user
         ]);
     }
 
@@ -91,8 +106,24 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $user = User::where('id', $id)->first();
+
+        if ($user == null) {
+            return response()->json([
+                'msg' => 'Erro ao encontrar este registro'
+            ], 404);
+        }
+
+        $data = User::destroy($user->id);
+
+        if ($data == 0) {
+            return response()->json([
+                'msg' => 'Erro ao excluir este registro'
+            ], 400);
+        }
+
         return response()->json([
-            'msg' => 'Rota de exclusão de usuário'
+            'msg' => 'Registro apagado com sucesso'
         ]);
     }
 
