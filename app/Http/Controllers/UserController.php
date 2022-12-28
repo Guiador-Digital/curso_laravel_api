@@ -56,7 +56,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::where('id', $id)->first();
+        $user = User::where('id', $id)->first(['id', 'name', 'email', 'created_at']);
 
         if ($user == null) {
             return response()->json([
