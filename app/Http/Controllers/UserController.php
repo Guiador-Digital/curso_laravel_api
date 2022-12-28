@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -26,8 +27,24 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
+        $data = User::create(
+            [
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => bcrypt($request->input('password'))
+            ]
+        );
+
+        if ($data == null) {
+            return response()->json([
+                'msg' => 'Houve um erro ao inserir este registro'
+            ], 400);
+        }
+
+
         return response()->json([
-            'msg' => 'Rota de inserção de usuário'
+            'data' => $data
         ]);
     }
 
