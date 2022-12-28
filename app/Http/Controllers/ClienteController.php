@@ -2,62 +2,100 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $data = Cliente::simplePaginate(10);
+
+        return response()->json($data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $data = Cliente::create(
+            [
+                'nome' => $request->input('nome'),
+                'empresa' => $request->input('empresa'),
+                'telefone' => $request->input('telefone'),
+                'email' => $request->input('email'),
+                'data_nascimento' => $request->input('data_nascimento'),
+            ]
+        );
+
+        if ($data == null) {
+            return response()->json([
+                'msg' => 'Erro ao inserir o registro'
+            ], 400);
+        }
+
+        return response()->json([
+            'data' => $data
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        //
+        $data = Cliente::where('id', $id)->first(['nome', 'empresa', 'telefone', 'email', 'data_nascimento', 'created_at']);
+
+        if ($data == null) {
+            return response()->json([
+                'msg' => 'Erro ao encontrar o registro'
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        $data = Cliente::where('id', $id)->first();
+
+        if ($data == null) {
+            return response()->json([
+                'msg' => 'Erro ao encontrar o registro'
+            ], 404);
+        }
+
+        $dataRequest = [
+            'nome' => $request->input('nome'),
+            'empresa' => $request->input('empresa'),
+            'telefone' => $request->input('telefone'),
+            'email' => $request->input('email'),
+            'data_nascimento' => $request->input('data_nascimento'),
+        ];
+        $data->update($dataRequest);
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        $data = Cliente::where('id', $id)->first();
+
+        if ($data == null) {
+            return response()->json([
+                'msg' => 'Erro ao encontrar o registro'
+            ], 404);
+        }
+
+        $resultDelete = Cliente::destroy($data->id);
+
+        if ($resultDelete == 0) {
+            return response()->json([
+                'msg' => 'Erro ao excluir o registro'
+            ], 400);
+        }
+
+        return response()->json([
+            'msg' => 'Registro excluído com sucesso'
+        ]);
     }
 }
