@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ClienteEnderecoController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\UserController;
@@ -30,12 +31,7 @@ Route::apiResource('users', UserController::class);
 
 // /clientes
 Route::apiResource('clientes', ClienteController::class);
-Route::group([
-    'prefix' => 'clientes'
-], function () {
-    // /clientes/enderecos
-    Route::apiResource('enderecos', ClienteController::class);
-});
+Route::apiResource('clientes-enderecos', ClienteEnderecoController::class);
 
 // Serviços
 Route::apiResource('servicos', ServicoController::class);
