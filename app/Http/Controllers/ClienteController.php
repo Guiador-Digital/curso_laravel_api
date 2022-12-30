@@ -39,7 +39,15 @@ class ClienteController extends Controller
 
     public function show($id)
     {
-        $data = Cliente::where('id', $id)->with(['endereco', 'ordens_servicos'])->first(['id', 'nome', 'empresa', 'telefone', 'email', 'data_nascimento', 'created_at']);
+        $data = Cliente::where('id', $id)
+            ->with([
+                'endereco',
+                'ordens_servicos' => function ($query) {
+                    $query->select('id', 'nome', 'valor', 'cliente_id');
+                    $query->where('valor', '>=', 100);
+                }
+            ])
+            ->first(['id', 'nome', 'empresa', 'telefone', 'email', 'data_nascimento', 'created_at']);
 
         if ($data == null) {
             return response()->json([
