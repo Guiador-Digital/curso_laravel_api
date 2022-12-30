@@ -24,4 +24,9 @@ class Cliente extends Model
     {
         return $this->hasOne(ClienteEndereco::class, 'cliente_id');
     }
+
+    public function ordens_servicos()
+    {
+        return $this->hasMany(OrdemServico::class, 'cliente_id');
+    }
 }
