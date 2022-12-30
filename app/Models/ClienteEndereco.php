@@ -21,4 +21,9 @@ class ClienteEndereco extends Model
         'cep',
         'cliente_id',
     ];
+
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class, 'cliente_id');
+    }
 }
