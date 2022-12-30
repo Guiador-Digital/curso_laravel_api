@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ClienteEnderecoController;
 use App\Http\Controllers\OrdemServicoController;
@@ -25,6 +26,16 @@ Route::group([
     'prefix' => 'users'
 ], function () {
     Route::get('/relatorio-mensal', [UserController::class, 'relatorioMensal']);
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth/user'
+], function () {
+    Route::post('login', [AuthUserController::class, 'login']);
+    Route::post('logout', [AuthUserController::class, 'logout']);
+    Route::post('refresh', [AuthUserController::class, 'refresh']);
+    Route::post('me', [AuthUserController::class, 'me']);
 });
 
 Route::apiResource('users', UserController::class);
