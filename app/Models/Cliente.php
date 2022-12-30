@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,6 +21,8 @@ class Cliente extends Model
         'data_nascimento',
     ];
 
+    protected $appends = ['possui_os_no_mes_vigente'];
+
     public function endereco()
     {
         return $this->hasOne(ClienteEndereco::class, 'cliente_id');
@@ -28,5 +31,24 @@ class Cliente extends Model
     public function ordens_servicos()
     {
         return $this->hasMany(OrdemServico::class, 'cliente_id');
+    }
+
+    public function getPossuiOsNoMesVigenteAttribute($model)
+    {
+        $now = Carbon::now();
+        $os = OrdemServico::where([
+            ['cliente_id', $this->id]
+        ])->whereMonth('created_at', $now->month)->count();
+
+        if ($os > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getEmpresaAttribute($value)
+    {
+        return $value ?? '';
     }
 }
