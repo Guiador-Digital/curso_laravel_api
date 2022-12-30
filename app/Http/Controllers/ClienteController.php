@@ -9,7 +9,7 @@ class ClienteController extends Controller
 {
     public function index()
     {
-        $data = Cliente::simplePaginate(10);
+        $data = Cliente::with('endereco')->withCount('ordens_servicos')->simplePaginate(10);
 
         return response()->json($data);
     }
@@ -39,7 +39,7 @@ class ClienteController extends Controller
 
     public function show($id)
     {
-        $data = Cliente::where('id', $id)->first(['nome', 'empresa', 'telefone', 'email', 'data_nascimento', 'created_at']);
+        $data = Cliente::where('id', $id)->with(['endereco', 'ordens_servicos'])->first(['id', 'nome', 'empresa', 'telefone', 'email', 'data_nascimento', 'created_at']);
 
         if ($data == null) {
             return response()->json([
