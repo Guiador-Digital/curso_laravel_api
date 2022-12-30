@@ -24,4 +24,9 @@ class OrdemServico extends Model
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
     }
+
+    public function servico()
+    {
+        return $this->belongsTo(Servico::class, 'servico_id');
+    }
 }
