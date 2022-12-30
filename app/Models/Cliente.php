@@ -19,4 +19,9 @@ class Cliente extends Model
         'email',
         'data_nascimento',
     ];
+
+    public function endereco()
+    {
+        return $this->hasOne(ClienteEndereco::class, 'cliente_id');
+    }
 }
