@@ -10,6 +10,9 @@ class ClienteController extends Controller
     public function index()
     {
         $data = Cliente::with('endereco')->withCount('ordens_servicos')->simplePaginate(10);
+        $data->makeHidden([
+            'possui_os_no_mes_vigente'
+        ]);
 
         return response()->json($data);
     }
