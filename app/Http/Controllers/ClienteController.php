@@ -26,6 +26,7 @@ class ClienteController extends Controller
                 'telefone' => $request->input('telefone'),
                 'email' => $request->input('email'),
                 'data_nascimento' => $request->input('data_nascimento'),
+                'password' => bcrypt($request->input('password'))
             ]
         );
 
@@ -79,6 +80,7 @@ class ClienteController extends Controller
             'telefone' => $request->input('telefone'),
             'email' => $request->input('email'),
             'data_nascimento' => $request->input('data_nascimento'),
+            'password' => bcrypt($request->input('password'))
         ];
         $data->update($dataRequest);
 

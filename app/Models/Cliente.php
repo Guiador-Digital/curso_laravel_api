@@ -18,8 +18,11 @@ class Cliente extends Model
         'empresa',
         'telefone',
         'email',
+        'password',
         'data_nascimento',
     ];
+
+    protected $hidden = ['password'];
 
     protected $appends = ['possui_os_no_mes_vigente'];
 
