@@ -20,14 +20,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Rotas de usuários
-
-Route::group([
-    'prefix' => 'users'
-], function () {
-    Route::get('/relatorio-mensal', [UserController::class, 'relatorioMensal']);
-});
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth/user'
@@ -38,14 +30,24 @@ Route::group([
     Route::post('me', [AuthUserController::class, 'me']);
 });
 
-Route::apiResource('users', UserController::class);
+Route::group([
+    'middleware' => ['api', 'auth:api']
+], function () {
+    Route::group([
+        'prefix' => 'users'
+    ], function () {
+        Route::get('/relatorio-mensal', [UserController::class, 'relatorioMensal']);
+    });
 
-// /clientes
-Route::apiResource('clientes', ClienteController::class);
-Route::apiResource('clientes-enderecos', ClienteEnderecoController::class);
+    Route::apiResource('users', UserController::class);
 
-// Serviços
-Route::apiResource('servicos', ServicoController::class);
+    // /clientes
+    Route::apiResource('clientes', ClienteController::class);
+    Route::apiResource('clientes-enderecos', ClienteEnderecoController::class);
 
-// Ordem de serviços
-Route::apiResource('ordens-servicos', OrdemServicoController::class);
+    // Serviços
+    Route::apiResource('servicos', ServicoController::class);
+
+    // Ordem de serviços
+    Route::apiResource('ordens-servicos', OrdemServicoController::class);
+});
