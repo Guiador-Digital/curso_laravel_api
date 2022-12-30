@@ -17,4 +17,9 @@ class Servico extends Model
         'descricao',
         'valor'
     ];
+
+    public function ordens_servicos()
+    {
+        return $this->hasMany(OrdemServico::class, 'servico_id');
+    }
 }
