@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreClienteRequest;
+use App\Http\Requests\UpdateClienteRequest;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
 
@@ -17,17 +19,10 @@ class ClienteController extends Controller
         return response()->json($data);
     }
 
-    public function store(Request $request)
+    public function store(StoreClienteRequest $request)
     {
 
-        $validated = $request->validate([
-            'nome' => 'required|string',
-            'empresa' =>  'max:191',
-            'telefone' =>  'required|digits_between:10,11',
-            'email' =>  'required|email|unique:clientes',
-            'data_nascimento' =>  'required|date',
-            'password' =>  'required|min:6|max:15',
-        ]);
+        $validated = $request->validated();
 
         $validated['password'] = bcrypt($validated['password']);
 
@@ -67,8 +62,10 @@ class ClienteController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateClienteRequest $request, $id)
     {
+        $validated = $request->validated();
+
         $data = Cliente::where('id', $id)->first();
 
         if ($data == null) {
@@ -77,15 +74,11 @@ class ClienteController extends Controller
             ], 404);
         }
 
-        $dataRequest = [
-            'nome' => $request->input('nome'),
-            'empresa' => $request->input('empresa'),
-            'telefone' => $request->input('telefone'),
-            'email' => $request->input('email'),
-            'data_nascimento' => $request->input('data_nascimento'),
-            'password' => bcrypt($request->input('password'))
-        ];
-        $data->update($dataRequest);
+        if (isset($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        }
+
+        $data->update($validated);
 
         return response()->json([
             'data' => $data
