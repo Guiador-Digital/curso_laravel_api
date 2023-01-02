@@ -19,16 +19,17 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
-        $data = Cliente::create(
-            [
-                'nome' => $request->input('nome'),
-                'empresa' => $request->input('empresa'),
-                'telefone' => $request->input('telefone'),
-                'email' => $request->input('email'),
-                'data_nascimento' => $request->input('data_nascimento'),
-                'password' => bcrypt($request->input('password'))
-            ]
-        );
+
+        $validated = $request->validate([
+            'nome' => 'required|string',
+            'empresa' =>  'max:191',
+            'telefone' =>  'required|digits_between:10,11',
+            'email' =>  'required|email|unique:clientes',
+            'data_nascimento' =>  'required|date',
+            'password' =>  'required|min:6|max:15',
+        ]);
+
+        $data = Cliente::create($validated);
 
         if ($data == null) {
             return response()->json([
