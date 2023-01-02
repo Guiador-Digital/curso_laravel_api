@@ -2,62 +2,100 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreClienteEnderecoRequest;
+use App\Http\Requests\UpdateClienteEnderecoRequest;
+use App\Models\ClienteEndereco;
 use Illuminate\Http\Request;
 
 class ClienteEnderecoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $data = ClienteEndereco::simplePaginate(10);
+
+        return response()->json($data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreClienteEnderecoRequest $request)
     {
-        //
+
+        $validated = $request->validated();
+
+        $data = ClienteEndereco::create(
+            $validated
+        );
+
+        if ($data == null) {
+            return response()->json([
+                'msg' => 'Erro ao inserir o registro'
+            ], 400);
+        }
+
+        return response()->json([
+            'data' => $data
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        //
+        $data = ClienteEndereco::where('id', $id)->first([
+            'nome',
+            'descricao',
+            'valor',
+            'servico_id',
+            'cliente_id', 'created_at'
+        ]);
+
+        if ($data == null) {
+            return response()->json([
+                'msg' => 'Erro ao encontrar o registro'
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(UpdateClienteEnderecoRequest $request, $id)
     {
-        //
+        $validated = $request->validated();
+
+        $data = ClienteEndereco::where('id', $id)->first();
+
+        if ($data == null) {
+            return response()->json([
+                'msg' => 'Erro ao encontrar o registro'
+            ], 404);
+        }
+
+        $data->update($validated);
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        $data = ClienteEndereco::where('id', $id)->first();
+
+        if ($data == null) {
+            return response()->json([
+                'msg' => 'Erro ao encontrar o registro'
+            ], 404);
+        }
+
+        $resultDelete = ClienteEndereco::destroy($data->id);
+
+        if ($resultDelete == 0) {
+            return response()->json([
+                'msg' => 'Erro ao excluir o registro'
+            ], 400);
+        }
+
+        return response()->json([
+            'msg' => 'Registro excluído com sucesso'
+        ]);
     }
 }
