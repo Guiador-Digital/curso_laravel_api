@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthClienteController;
 use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ClienteEnderecoController;
@@ -19,6 +20,49 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+/*
+|--------------------------------------------------------------------------
+| Rotas Autenticadas por Clientes
+|--------------------------------------------------------------------------
+*/
+
+Route::group([
+    'middleware' => ['api', 'assign.guard:cliente'],
+    'prefix' => 'auth/clientes',
+    'as' => 'auth'
+], function () {
+    Route::post('login', [AuthClienteController::class, 'login']);
+    Route::post('logout', [AuthClienteController::class, 'logout']);
+    Route::post('refresh', [AuthClienteController::class, 'refresh']);
+    Route::post('me', [AuthClienteController::class, 'me']);
+});
+
+
+Route::group([
+    'middleware' => ['api', 'assign.guard:cliente', 'auth:cliente'],
+    'prefix' => 'portal/clientes',
+    'as' => 'portal/'
+], function () {
+    // /clientes
+    Route::apiResource('clientes', ClienteController::class);
+    Route::apiResource('clientes-enderecos', ClienteEnderecoController::class);
+
+    // Serviços
+    Route::apiResource('servicos', ServicoController::class);
+
+    // Ordem de serviços
+    Route::apiResource('ordens-servicos', OrdemServicoController::class);
+});
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Rotas Autenticadas por Users
+|--------------------------------------------------------------------------
+*/
+
 
 Route::group([
     'middleware' => 'api',
