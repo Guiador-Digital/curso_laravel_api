@@ -16,6 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', User::class);
         $data = User::simplePaginate(10);
 
         return response()->json($data);
@@ -29,6 +30,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        $this->authorize('create', User::class);
 
         $validated = $request->validated();
 
@@ -58,6 +60,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        $this->authorize('view', User::class);
+
         $user = User::where('id', $id)->first(['id', 'name', 'email', 'created_at']);
 
         if ($user == null) {
@@ -80,6 +84,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, $id)
     {
+        $this->authorize('update', User::class);
 
         $validated = $request->validated();
 
@@ -106,6 +111,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('delete', User::class);
+
         $user = User::where('id', $id)->first();
 
         if ($user == null) {
