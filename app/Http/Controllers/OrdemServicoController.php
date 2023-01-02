@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOrdemServicoRequest;
+use App\Http\Requests\UpdateOrdemServicoRequest;
 use App\Models\OrdemServico;
 use Illuminate\Http\Request;
 
@@ -14,16 +16,12 @@ class OrdemServicoController extends Controller
         return response()->json($data);
     }
 
-    public function store(Request $request)
+    public function store(StoreOrdemServicoRequest $request)
     {
+        $validated = $request->validated();
+
         $data = OrdemServico::create(
-            [
-                'nome' => $request->input('nome'),
-                'descricao' => $request->input('descricao'),
-                'valor' => $request->input('valor'),
-                'servico_id' => $request->input('servico_id'),
-                'cliente_id' => $request->input('cliente_id'),
-            ]
+            $validated
         );
 
         if ($data == null) {
@@ -58,8 +56,10 @@ class OrdemServicoController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateOrdemServicoRequest $request, $id)
     {
+        $validated = $request->validated();
+
         $data = OrdemServico::where('id', $id)->first();
 
         if ($data == null) {
@@ -68,14 +68,7 @@ class OrdemServicoController extends Controller
             ], 404);
         }
 
-        $dataRequest = [
-            'nome' => $request->input('nome'),
-            'descricao' => $request->input('descricao'),
-            'valor' => $request->input('valor'),
-            'servico_id' => $request->input('servico_id'),
-            'cliente_id' => $request->input('cliente_id'),
-        ];
-        $data->update($dataRequest);
+        $data->update($validated);
 
         return response()->json([
             'data' => $data
