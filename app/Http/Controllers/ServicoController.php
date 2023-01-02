@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreServicoRequest;
+use App\Http\Requests\UpdateServicoRequest;
 use App\Models\Servico;
 use Illuminate\Http\Request;
 
@@ -14,14 +16,13 @@ class ServicoController extends Controller
         return response()->json($data);
     }
 
-    public function store(Request $request)
+    public function store(StoreServicoRequest $request)
     {
+
+        $validated = $request->validated();
+
         $data = Servico::create(
-            [
-                'nome' => $request->input('nome'),
-                'descricao' => $request->input('descricao'),
-                'valor' => $request->input('valor'),
-            ]
+            $validated
         );
 
         if ($data == null) {
@@ -50,8 +51,11 @@ class ServicoController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateServicoRequest $request, $id)
     {
+
+        $validated = $request->validated();
+
         $data = Servico::where('id', $id)->first();
 
         if ($data == null) {
@@ -60,12 +64,7 @@ class ServicoController extends Controller
             ], 404);
         }
 
-        $dataRequest = [
-            'nome' => $request->input('nome'),
-            'descricao' => $request->input('descricao'),
-            'valor' => $request->input('valor'),
-        ];
-        $data->update($dataRequest);
+        $data->update($validated);
 
         return response()->json([
             'data' => $data
