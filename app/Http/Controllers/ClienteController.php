@@ -29,6 +29,8 @@ class ClienteController extends Controller
             'password' =>  'required|min:6|max:15',
         ]);
 
+        $validated['password'] = bcrypt($validated['password']);
+
         $data = Cliente::create($validated);
 
         if ($data == null) {
