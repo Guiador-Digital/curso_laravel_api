@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -25,15 +27,15 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
 
+        $validated = $request->validated();
+
+        $validated['password'] = bcrypt($validated['password']);
+
         $data = User::create(
-            [
-                'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'password' => bcrypt($request->input('password'))
-            ]
+            $validated
         );
 
         if ($data == null) {
@@ -76,8 +78,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
+
+        $validated = $request->validated();
+
         $user = User::where('id', $id)->first();
 
         if ($user == null) {
@@ -86,12 +91,7 @@ class UserController extends Controller
             ], 404);
         }
 
-        $data = [
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-        ];
-
-        $user->update($data);
+        $user->update($validated);
 
         return response()->json([
             'data' => $user
