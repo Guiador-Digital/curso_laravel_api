@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Cliente;
+use App\Models\ClienteEndereco;
 use App\Models\User;
+use App\Policies\ClienteEnderecoPolicy;
 use App\Policies\ClientePolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +17,8 @@ class AppServiceProvider extends ServiceProvider
 
     protected $policies = [
         User::class => UserPolicy::class,
-        Cliente::class => ClientePolicy::class
+        Cliente::class => ClientePolicy::class,
+        ClienteEndereco::class => ClienteEnderecoPolicy::class
     ];
 
     /**

@@ -11,6 +11,7 @@ class ClienteEnderecoController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Cliente::class);
         $data = ClienteEndereco::simplePaginate(10);
 
         return response()->json($data);
@@ -18,6 +19,8 @@ class ClienteEnderecoController extends Controller
 
     public function store(StoreClienteEnderecoRequest $request)
     {
+
+        $this->authorize('create', Cliente::class);
 
         $validated = $request->validated();
 
@@ -39,11 +42,14 @@ class ClienteEnderecoController extends Controller
     public function show($id)
     {
         $data = ClienteEndereco::where('id', $id)->first([
-            'nome',
-            'descricao',
-            'valor',
-            'servico_id',
-            'cliente_id', 'created_at'
+            'rua',
+            'numero',
+            'bairro',
+            'cidade',
+            'estado',
+            'cep',
+            'cliente_id',
+            'created_at'
         ]);
 
         if ($data == null) {
@@ -51,6 +57,8 @@ class ClienteEnderecoController extends Controller
                 'msg' => 'Erro ao encontrar o registro'
             ], 404);
         }
+
+        $this->authorize('view', $data);
 
         return response()->json([
             'data' => $data
@@ -69,6 +77,8 @@ class ClienteEnderecoController extends Controller
             ], 404);
         }
 
+        $this->authorize('update', $data);
+
         $data->update($validated);
 
         return response()->json([
@@ -85,6 +95,8 @@ class ClienteEnderecoController extends Controller
                 'msg' => 'Erro ao encontrar o registro'
             ], 404);
         }
+
+        $this->authorize('delete', $data);
 
         $resultDelete = ClienteEndereco::destroy($data->id);
 
