@@ -11,6 +11,8 @@ class OrdemServicoController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', OrdemServico::class);
+
         $data = OrdemServico::simplePaginate(10);
 
         return response()->json($data);
@@ -18,6 +20,8 @@ class OrdemServicoController extends Controller
 
     public function store(StoreOrdemServicoRequest $request)
     {
+        $this->authorize('create', OrdemServico::class);
+
         $validated = $request->validated();
 
         $data = OrdemServico::create(
@@ -51,6 +55,8 @@ class OrdemServicoController extends Controller
             ], 404);
         }
 
+        $this->authorize('view', $data);
+
         return response()->json([
             'data' => $data
         ]);
@@ -68,6 +74,8 @@ class OrdemServicoController extends Controller
             ], 404);
         }
 
+        $this->authorize('update', $data);
+
         $data->update($validated);
 
         return response()->json([
@@ -84,6 +92,8 @@ class OrdemServicoController extends Controller
                 'msg' => 'Erro ao encontrar o registro'
             ], 404);
         }
+
+        $this->authorize('delete', $data);
 
         $resultDelete = OrdemServico::destroy($data->id);
 
