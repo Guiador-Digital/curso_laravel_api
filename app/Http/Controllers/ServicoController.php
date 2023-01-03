@@ -11,6 +11,7 @@ class ServicoController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Servico::class);
         $data = Servico::simplePaginate(10);
 
         return response()->json($data);
@@ -18,7 +19,7 @@ class ServicoController extends Controller
 
     public function store(StoreServicoRequest $request)
     {
-
+        $this->authorize('create', Servico::class);
         $validated = $request->validated();
 
         $data = Servico::create(
@@ -46,6 +47,8 @@ class ServicoController extends Controller
             ], 404);
         }
 
+        $this->authorize('view', $data);
+
         return response()->json([
             'data' => $data
         ]);
@@ -64,6 +67,8 @@ class ServicoController extends Controller
             ], 404);
         }
 
+        $this->authorize('update', $data);
+
         $data->update($validated);
 
         return response()->json([
@@ -80,6 +85,8 @@ class ServicoController extends Controller
                 'msg' => 'Erro ao encontrar o registro'
             ], 404);
         }
+
+        $this->authorize('delete', $data);
 
         $resultDelete = Servico::destroy($data->id);
 
