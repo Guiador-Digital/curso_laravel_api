@@ -11,6 +11,8 @@ class ClienteController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Cliente::class);
+
         $data = Cliente::with('endereco')->withCount('ordens_servicos')->simplePaginate(10);
         $data->makeHidden([
             'possui_os_no_mes_vigente'
@@ -21,6 +23,7 @@ class ClienteController extends Controller
 
     public function store(StoreClienteRequest $request)
     {
+        $this->authorize('create', Cliente::class);
 
         $validated = $request->validated();
 
@@ -57,6 +60,8 @@ class ClienteController extends Controller
             ], 404);
         }
 
+        $this->authorize('view', $data);
+
         return response()->json([
             'data' => $data
         ]);
@@ -73,6 +78,8 @@ class ClienteController extends Controller
                 'msg' => 'Erro ao encontrar o registro'
             ], 404);
         }
+
+        $this->authorize('update', $data);
 
         if (isset($validated['password'])) {
             $validated['password'] = bcrypt($validated['password']);
@@ -94,6 +101,8 @@ class ClienteController extends Controller
                 'msg' => 'Erro ao encontrar o registro'
             ], 404);
         }
+
+        $this->authorize('delete', $data);
 
         $resultDelete = Cliente::destroy($data->id);
 
